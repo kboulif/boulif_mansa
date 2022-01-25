@@ -9,14 +9,13 @@ from model import Account, Transaction, Model
 import uvicorn
 
 
-
 class RequestPredict(BaseModel):
     account: Account
     transactions: List[Transaction]
 
     @validator("transactions")
     def validate_transaction_history(cls, v, *, values):
-        # validate that 
+        # validate that
         # - the transaction list passed has at least 6 months history
         # - no transaction is posterior to the account's update date
         if len(v) < 1:
@@ -40,9 +39,6 @@ class RequestPredict(BaseModel):
         return v
 
 
-
-
-
 app = FastAPI()
 
 
@@ -53,23 +49,16 @@ async def root(predict_body: RequestPredict):
 
     # Call your prediction function/code here
     ####################################################
-    MODEL:str="model.pkl"
+    MODEL: str = "model.pkl"
     model = Model(model_path=MODEL)
-    predicted_amount = model.predict(transactions = transactions, account=account)
-    #predicted_amount = predict(transactions, account)
+    predicted_amount = model.predict(transactions=transactions, account=account)
 
     # Return predicted amount
     return {
-        "id_account":predicted_amount.id,
-        "predicted_amount": predicted_amount.predicted_amount
+        "id_account": predicted_amount.id,
+        "predicted_amount": predicted_amount.predicted_amount,
     }
-    
-    #return(predicted_amount)
 
 
-if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=8000) 
-
-
-
-
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)
